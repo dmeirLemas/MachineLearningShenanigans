@@ -1,3 +1,6 @@
+# Outside Code NOT MINE
+
+
 from data import get_mnist
 import numpy as np
 import matplotlib.pyplot as plt
