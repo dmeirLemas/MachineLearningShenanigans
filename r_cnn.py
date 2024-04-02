@@ -1,11 +1,11 @@
-import tensorflow as tf
+import keras
+from keras import layers, models
+from keras.applications import ResNet50
+from keras.layers import Dense, GlobalAveragePooling2D, Input
+from keras.models import Model
+from keras.optimizers import Adam
+from keras.losses import SparseCategoricalCrossentropy
 import numpy as np
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Input
-from tensorflow.keras.models import Model
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import SparseCategoricalCrossentropy
-from tensorflow.keras import layers, models
 
 
 def rpn_layer(base_layers, num_anchors):
@@ -99,6 +99,7 @@ input_shape = (224, 224, 3)
 # Define ResNet50 model
 base_model = ResNet50(weights=None, include_top=False, input_shape=input_shape)
 
+
 # Add custom classification head
 x = GlobalAveragePooling2D()(base_model.output)
 x = Dense(512, activation="relu")(x)
@@ -121,7 +122,7 @@ resnet50_model.fit(
 resnet50_model.save("resnet50_model.h5")
 
 # Load the trained ResNet50 model
-resnet50_model = tf.keras.models.load_model("resnet50_model.h5")
+resnet50_model = keras.models.load_model("resnet50_model.h5")
 
 # Define Faster R-CNN model with ResNet50 backbone
 num_classes = 64
@@ -131,9 +132,9 @@ faster_rcnn_model.summary()
 
 
 # Define optimizer and loss functions
-optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
-classification_loss = tf.keras.losses.SparseCategoricalCrossentropy()
-regression_loss = tf.keras.losses.MeanSquaredError()
+optimizer = keras.optimizers.Adam(learning_rate=0.001)
+classification_loss = keras.losses.SparseCategoricalCrossentropy()
+regression_loss = keras.losses.MeanSquaredError()
 
 # Compile the model with multiple losses
 faster_rcnn_model.compile(
@@ -159,7 +160,7 @@ print("Validation Loss:", val_loss)
 faster_rcnn_model.save("faster_rcnn_model.h5")
 
 # Load the trained Faster R-CNN model
-faster_rcnn_model = tf.keras.models.load_model("faster_rcnn_model.h5")
+faster_rcnn_model = keras.models.load_model("faster_rcnn_model.h5")
 
 # Assuming you have test_images containing your test images
 # Make predictions on test images
